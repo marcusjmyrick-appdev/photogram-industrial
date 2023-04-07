@@ -1,15 +1,17 @@
 require "rails_helper"
 
 describe "New User record" do
-  let(:user) { User.create(username: "alice", email: "alice@example.com", password: "password") }
-
+  before do
+    sign_in_user if user_model_exists?
+  end
+  
   it "has a default `likes_count` of 0", points: 1 do
-    expect(user.likes_count).to eq(0),
+    expect(@user.likes_count).to eq(0),
       "Expected a new user to have a default `likes_count` of 0. Did you make the change in your user migration file?"
   end
 
   it "has a default `comments_count` of 0", points: 1 do
-    expect(user.comments_count).to eq(0),
+    expect(@user.comments_count).to eq(0),
       "Expected a new user to have a default `comments_count` of 0. Did you make the change in your user migration file?"
   end
 end
@@ -24,6 +26,13 @@ describe "The home page" do
 
     expect(page).to have_selector("nav[class^='navbar']"),
       "Expected home page to have a bootstrap navbar <nav class='navbar ...'> ."
+  end
+
+  it "has an edit profile link for the signed in user", points: 1 do
+    visit "/"
+
+    expect(page).to have_selector("a[href='/users/edit']", text: "Edit #{@user.username}"),
+      "Expected home page to have 'Edit [USERNAME]' link with the username of the signed in user."
   end
 
   it "has a sign out link with a DELETE request for the signed in user", points: 1 do
@@ -65,12 +74,14 @@ describe "User authentication with the Devise gem" do
 end
 
 def sign_in_user
-  user = User.create(username: "alice", email: "alice@example.com", password: "password")
+  @user = User.create(username: "alice", email: "alice@example.com", password: "password")
   visit new_user_session_path
 
-  fill_in "Email", with: user.email
-  fill_in "Password", with: user.password
+  fill_in "Email", with: @user.email
+  fill_in "Password", with: @user.password
   click_button "Log in"
+
+  return @user
 end
 
 def user_model_exists?
