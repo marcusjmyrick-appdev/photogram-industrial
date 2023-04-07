@@ -23,7 +23,21 @@ describe "The home page" do
     visit "/"
 
     expect(page).to have_selector("nav[class^='navbar']"),
-      "Expected home page to have have a bootstrap navbar <nav class='navbar ...'> ."
+      "Expected home page to have a bootstrap navbar <nav class='navbar ...'> ."
+  end
+
+  it "has a sign out link with a DELETE request for the signed in user", points: 1 do
+    visit "/"
+
+    expect(page).to have_selector("a[href='/users/sign_out'][data-method='delete']"),
+      "Expected home page to have 'Sign out' link with the proper data-method='delete' if the user is signed in."
+  end
+
+  it "does not have a sign in link if the user is already signed in", points: 1 do
+    visit "/"
+
+    expect(page).to_not have_selector("a[href='/users/sign_in']"),
+      "Expected home page to not have 'Sign in' link if the user is signed in."
   end
 end
 
