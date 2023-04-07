@@ -17,6 +17,17 @@ end
 describe "User authentication with the Devise gem" do
   let(:user) { User.create(username: "alice", email: "alice@example.com", password: "password") }
 
+  it "allows a signed up user to sign in", points: 1 do
+    visit new_user_session_path
+
+    fill_in "Email", with: user.email
+    fill_in "Password", with: user.password
+    click_button "Log in"
+
+    expect(page.current_path).to eq("/"),
+      "Expected to successfully sign in a signed up user."
+  end
+
   it "requires sign in before any action with the Devise `before_action :authenticate_user!` method", points: 2 do
     visit "/#{user.username}"
     current_url = page.current_path
