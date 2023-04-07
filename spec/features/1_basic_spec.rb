@@ -14,6 +14,19 @@ describe "New User record" do
   end
 end
 
+describe "The home page" do
+  before do
+    sign_in_user if user_model_exists?
+  end
+
+  it "has a bootstrap navbar", points: 1 do
+    visit "/"
+
+    expect(page).to have_selector("nav[class^='navbar']"),
+      "Expected home page to have have a bootstrap navbar <nav class='navbar ...'> ."
+  end
+end
+
 describe "User authentication with the Devise gem" do
   let(:user) { User.create(username: "alice", email: "alice@example.com", password: "password") }
 
