@@ -50,6 +50,19 @@ describe "The home page" do
   end
 end
 
+describe "The /users/edit page" do
+  before do
+    sign_in_user if user_model_exists?
+  end
+
+  it "can be visited", points: 1 do
+    visit "/users/edit"
+
+    expect(page.status_code).to be(200),
+      "Expected to visit /users/edit successfully."
+  end
+end
+
 describe "User authentication with the Devise gem" do
   let(:user) { User.create(username: "alice", email: "alice@example.com", password: "password") }
 
